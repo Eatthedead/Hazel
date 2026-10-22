@@ -133,6 +133,22 @@
    "flags": []
   },
   {
+   "drug": "MARBOFLOXACIN (Zeniquin) — Oral Suspension",
+   "regimen": "Compounded 10 mg/mL [VET]",
+   "kind": "volume",
+   "dose_per_kg": 4.76,
+   "unit": "mg",
+   "per": "dose",
+   "concentration_mg_per_mL": 10,
+   "frequency": "SID × 14 days",
+   "route": "PO",
+   "notes": "[VET] From a veterinarian's prescription for a 525 g squirrel: 0.25 mL of 10 mg/mL once daily (Oct 2026). Fluoroquinolone (same class as Baytril) — never combine with Baytril. Use caution in unweaned/growing babies; vet-directed.",
+   "flags": [
+    "vet_rx",
+    "vet_confirm"
+   ]
+  },
+  {
    "drug": "NUFLOR (Florfenicol)",
    "regimen": "Working solution",
    "kind": "volume",

@@ -108,3 +108,9 @@ def test_dose_calculator_matches_bible_and_guards_input():
     assert "error" in library.calculate_dose("PANACUR (Fenbendazole)", "Giardia", 0)
     assert "error" in library.calculate_dose("PANACUR (Fenbendazole)", "Giardia", 50000)
     assert "error" in library.calculate_dose("Not a drug", "x", 100)
+
+def test_marbofloxacin_matches_peppers_prescription():
+    # Vet Rx, Oct 2026: 0.25 mL of 10 mg/mL once daily for a 525 g squirrel
+    r = library.calculate_dose("MARBOFLOXACIN (Zeniquin) — Oral Suspension", "Compounded 10 mg/mL [VET]", 525)
+    assert r["volume"] == "0.250 mL per dose"
+    assert "Baytril" in r["notes"]

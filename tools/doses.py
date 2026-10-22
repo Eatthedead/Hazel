@@ -39,6 +39,10 @@ reg("DOXYCYCLINE (Vibramycin)", "10 mg/kg/day split BID (preferred)", 5, 5, "BID
 reg("DOXYCYCLINE (Vibramycin)", "10 mg/kg/day once daily", 10, 5, "SID")
 reg("METRONIDAZOLE (Flagyl)", "Oral", 10, 5, "BID (q12h)",
     notes="5 mg/mL suspension from a crushed 250 mg tablet.")
+reg("MARBOFLOXACIN (Zeniquin) — Oral Suspension", "Compounded 10 mg/mL [VET]", 4.76, 10, "SID × 14 days",
+    notes="[VET] From a veterinarian's prescription for a 525 g squirrel: 0.25 mL of 10 mg/mL once daily (Oct 2026). "
+          "Fluoroquinolone (same class as Baytril) — never combine with Baytril. Use caution in unweaned/growing babies; vet-directed.",
+    flags=["vet_rx", "vet_confirm"])
 reg("NUFLOR (Florfenicol)", "Working solution", 20, 30, "Two doses total, 48 h apart",
     notes="Dilute 300 mg/mL injectable 1:9 to 30 mg/mL. DO NOT give a third dose.")
 
