@@ -149,6 +149,21 @@
    ]
   },
   {
+   "drug": "SMZ-TMP (Sulfamethoxazole + Trimethoprim)",
+   "regimen": "48 mg/mL suspension (240 mg/5 mL) [VET]",
+   "kind": "volume",
+   "dose_per_kg": 27.43,
+   "unit": "mg",
+   "per": "dose",
+   "concentration_mg_per_mL": 48,
+   "frequency": "BID (q12h) × 10 days",
+   "route": "PO",
+   "notes": "[VET] From veterinarian prescriptions for ~525 g squirrels: 0.3 mL of 240 mg/5 mL twice daily for 10 days (Oct 2026). Dose is combined SMZ + TMP. Compounded bottles vary — confirm mg/mL on your label.",
+   "flags": [
+    "vet_rx"
+   ]
+  },
+  {
    "drug": "NUFLOR (Florfenicol)",
    "regimen": "Working solution",
    "kind": "volume",

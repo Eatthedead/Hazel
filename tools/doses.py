@@ -43,6 +43,10 @@ reg("MARBOFLOXACIN (Zeniquin) — Oral Suspension", "Compounded 10 mg/mL [VET]",
     notes="[VET] From a veterinarian's prescription for a 525 g squirrel: 0.25 mL of 10 mg/mL once daily (Oct 2026). "
           "Fluoroquinolone (same class as Baytril) — never combine with Baytril. Use caution in unweaned/growing babies; vet-directed.",
     flags=["vet_rx", "vet_confirm"])
+reg("SMZ-TMP (Sulfamethoxazole + Trimethoprim)", "48 mg/mL suspension (240 mg/5 mL) [VET]", 27.43, 48, "BID (q12h) × 10 days",
+    notes="[VET] From veterinarian prescriptions for ~525 g squirrels: 0.3 mL of 240 mg/5 mL twice daily for 10 days (Oct 2026). "
+          "Dose is combined SMZ + TMP. Compounded bottles vary — confirm mg/mL on your label.",
+    flags=["vet_rx"])
 reg("NUFLOR (Florfenicol)", "Working solution", 20, 30, "Two doses total, 48 h apart",
     notes="Dilute 300 mg/mL injectable 1:9 to 30 mg/mL. DO NOT give a third dose.")
 

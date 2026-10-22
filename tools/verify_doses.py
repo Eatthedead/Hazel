@@ -58,6 +58,7 @@ MAP = [
  ("MELOXICAM (Metacam)", 3, 2, "Set B 1 mg/kg (BSAVA) — cat Metacam", "mL"),
  ("MELOXICAM (Metacam)", 4, 2, "Set B 1 mg/kg (BSAVA) — dog Metacam", "mL"),
  ("TRAMADOL", 0, 1, "Standard", "mL"),
+ ("SMZ-TMP (Sulfamethoxazole + Trimethoprim)", 0, 2, "48 mg/mL suspension (240 mg/5 mL) [VET]", "mL"),
  ("MARBOFLOXACIN (Zeniquin) — Oral Suspension", 0, 2, "Compounded 10 mg/mL [VET]", "mL"),
  ("SUCRALFATE (Carafate)", 0, 1, "Standard", "mL"),
  ("FAMOTIDINE (Pepcid)", 0, 1, "Standard", "mL"),

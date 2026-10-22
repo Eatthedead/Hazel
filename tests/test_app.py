@@ -114,3 +114,9 @@ def test_marbofloxacin_matches_peppers_prescription():
     r = library.calculate_dose("MARBOFLOXACIN (Zeniquin) — Oral Suspension", "Compounded 10 mg/mL [VET]", 525)
     assert r["volume"] == "0.250 mL per dose"
     assert "Baytril" in r["notes"]
+
+
+def test_smz_tmp_matches_vet_prescription():
+    # Vet Rx, Oct 2026: 0.3 mL of 240 mg/5 mL (48 mg/mL) twice daily for a ~525 g squirrel
+    r = library.calculate_dose("SMZ-TMP (Sulfamethoxazole + Trimethoprim)", "48 mg/mL suspension (240 mg/5 mL) [VET]", 525)
+    assert r["volume"] == "0.300 mL per dose"
