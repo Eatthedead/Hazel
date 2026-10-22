@@ -1,0 +1,14 @@
+# Render blueprint — only used if Hazel moves to Render. Railway ignores this file.
+services:
+  - type: web
+    name: hazel
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT --worker-class gevent --workers 1 --timeout 120
+    envVars:
+      - key: ANTHROPIC_API_KEY
+        sync: false          # paste in Render's dashboard
+      - key: REHABBER_PASSWORD
+        sync: false          # paste in Render's dashboard
+      - key: SECRET_KEY
+        generateValue: true  # Render creates a random one
