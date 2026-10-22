@@ -116,7 +116,7 @@ Do NOT give pedialyte when feeding formula. Too much sodium can cause kidney dam
 NEVER USE:
 - Cow's milk, goat's milk, human infant formula, soy milk
 - Liquid Esbilac
-- Fox Valley 32/40 for any squirrel under 4 weeks old. The particulate matter in the forumla is insoluable and will bind up in their gut and cause stasis and death.
+- Fox Valley 32/40 — we do not use this formula. If you have some, save it and add it to homemade treats for older kids only. Use Fox Valley 20/50.
 - KMR (kitten milk replacer)
 
 A Cold Stomach is a Tomb. Never Feed a Cold Baby. 🌡️🍼It is the most common mistake made by well-meaning rescuers. You find a cold, abandoned squirrel. Your instinct screams: "It's hungry! Feed it!" Stop. If you feed a hypothermic animal, you are likely killing it. In the US veterinary world, this is the #1 rule of neonate rescue.
