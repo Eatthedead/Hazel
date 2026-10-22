@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sam 🐿️ — I Found a Baby Squirrel!</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --forest-dark:   #1a2e1a;
+      --forest-green:  #3d6b3d;
+      --leaf-green:    #5a8a3a;
+      --moss:          #7aaa52;
+      --bark-dark:     #3b2a1a;
+      --bark:          #6b4c2a;
+      --bark-light:    #a07850;
+      --acorn:         #c8a060;
+      --cream:         #f5f0e8;
+      --chat-bg:       #f8f4ee;
+      --text-dark:     #2a2015;
+      --text-mid:      #4a3a28;
+      --text-light:    #7a6a58;
+      --shadow:        rgba(30,20,10,0.15);
+      --red-warn:      #c0392b;
+      --amber:         #e8a030;
+      --amber-dark:    #a06010;
+      --user-bubble:   #b07020;
+    }
+
+    html, body { height: 100%; font-family: 'Georgia', 'Times New Roman', serif; background: var(--forest-dark); color: var(--text-dark); }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 20% 20%, rgba(200,140,40,0.12) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 80%, rgba(61,107,61,0.12) 0%, transparent 60%),
+        linear-gradient(160deg, #1a2e1a 0%, #0f1f0f 100%);
+      z-index: 0;
+    }
+
+    .leaf { position: fixed; font-size: 1.4rem; opacity: 0; animation: fall linear infinite; pointer-events: none; z-index: 1; }
+    @keyframes fall {
+      0%   { transform: translateY(-60px) rotate(0deg); opacity: 0; }
+      10%  { opacity: 0.6; }
+      90%  { opacity: 0.4; }
+      100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+    }
+
+    #app { position: relative; z-index: 2; display: flex; flex-direction: column; height: 100dvh; max-width: 820px; margin: 0 auto; }
+
+    /* Header */
+    header {
+      background: linear-gradient(135deg, #2a1800 0%, #5a3010 100%);
+      border-bottom: 3px solid var(--amber);
+      padding: 14px 20px;
+      display: flex; align-items: center; gap: 14px;
+      box-shadow: 0 4px 20px var(--shadow);
+      flex-shrink: 0;
+    }
+    .header-icon { font-size: 2.4rem; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4)); }
+    .header-text h1 { font-size: 1.35rem; color: var(--amber); font-weight: normal; letter-spacing: 0.03em; text-shadow: 0 1px 3px rgba(0,0,0,0.5); }
+    .header-text p { font-size: 0.78rem; color: var(--bark-light); font-family: sans-serif; margin-top: 2px; }
+    .status-dot { width: 8px; height: 8px; background: var(--amber); border-radius: 50%; display: inline-block; margin-right: 5px; box-shadow: 0 0 6px var(--amber); animation: pulse 2s ease-in-out infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+    .back-link { margin-left: auto; font-size: 0.75rem; color: var(--bark-light); font-family: sans-serif; text-decoration: none; padding: 5px 12px; border: 1px solid var(--bark); border-radius: 20px; white-space: nowrap; transition: all 0.2s ease; flex-shrink: 0; }
+    .back-link:hover { color: var(--cream); border-color: var(--bark-light); }
+
+    /* Emergency banner */
+    .emergency-banner {
+      background: linear-gradient(90deg, #3a1000, #5a2000, #3a1000);
+      border-bottom: 1px solid #8a4010;
+      padding: 8px 16px;
+      font-size: 0.75rem; color: #ffb060; font-family: sans-serif; text-align: center; flex-shrink: 0; line-height: 1.5;
+    }
+    .emergency-banner strong { color: #ffcc80; }
+
+    /* Chat window */
+    #chat-window {
+      flex: 1; overflow-y: auto; padding: 20px 16px;
+      display: flex; flex-direction: column; gap: 16px;
+      background: var(--chat-bg);
+      scroll-behavior: smooth;
+    }
+
+    /* Messages */
+    .message { display: flex; gap: 10px; align-items: flex-start; animation: fadeSlide 0.3s ease forwards; }
+    @keyframes fadeSlide { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .message.user { flex-direction: row-reverse; }
+
+    .avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; box-shadow: 0 2px 8px var(--shadow); }
+    .avatar.bot  { background: linear-gradient(135deg, #5a3010 0%, #2a1800 100%); }
+    .avatar.user { background: linear-gradient(135deg, var(--forest-green) 0%, var(--forest-dark) 100%); }
+
+    .bubble { max-width: 82%; padding: 12px 16px; border-radius: 18px; line-height: 1.65; font-size: 0.93rem; box-shadow: 0 2px 10px var(--shadow); }
+    .bubble.bot { background: #fff; border: 1px solid #e0d8cc; border-top-left-radius: 4px; color: var(--text-dark); }
+    .bubble.user { background: linear-gradient(135deg, var(--user-bubble) 0%, #4a2000 100%); border-top-right-radius: 4px; color: #fff3e0; font-family: sans-serif; }
+    .bubble.bot strong { color: var(--bark-dark); }
+    .bubble.bot ul { padding-left: 20px; margin: 6px 0; }
+    .bubble.bot li { margin: 4px 0; }
+    .bubble.bot p { margin: 6px 0; }
+    .bubble.bot p:first-child { margin-top: 0; }
+    .bubble.bot p:last-child { margin-bottom: 0; }
+    .bubble.bot .warn { background: #fff5f5; border: 1px solid #ffcccc; border-radius: 8px; padding: 8px 12px; color: var(--red-warn); font-size: 0.85rem; font-family: sans-serif; margin: 8px 0; }
+
+    /* Choice buttons — shown inside a bot message */
+    .choices { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+    .choice-btn {
+      background: linear-gradient(135deg, #3a2a10 0%, #2a1800 100%);
+      border: 1.5px solid #8a5a20;
+      color: #e8c070;
+      padding: 10px 16px;
+      border-radius: 12px;
+      font-size: 0.88rem;
+      font-family: sans-serif;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.2s ease;
+      line-height: 1.4;
+    }
+    .choice-btn:hover { background: linear-gradient(135deg, #5a3a10 0%, #3a2800 100%); border-color: var(--amber); color: var(--cream); transform: translateX(3px); }
+    .choice-btn:disabled { opacity: 0.5; cursor: default; transform: none; }
+    .choice-btn.selected { border-color: var(--amber); background: linear-gradient(135deg, #5a3a10 0%, #3a2800 100%); color: var(--cream); }
+
+    /* Typing indicator */
+    .typing-indicator { display: flex; gap: 5px; align-items: center; padding: 14px 16px; }
+    .typing-indicator span { width: 8px; height: 8px; background: var(--bark-light); border-radius: 50%; animation: bounce 1.2s ease-in-out infinite; }
+    .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+    .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes bounce { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-6px); } }
+
+    .streaming-cursor::after { content: '▋'; color: var(--amber); animation: blink 0.7s step-end infinite; }
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+    /* Input area — hidden until tree is complete */
+    #input-area {
+      background: linear-gradient(180deg, #2a1800 0%, #120a00 100%);
+      border-top: 2px solid #6a3a10;
+      padding: 12px 14px;
+      display: none;
+      gap: 10px; align-items: flex-end; flex-shrink: 0;
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.3);
+    }
+    #input-area.visible { display: flex; }
+    #message-input { flex: 1; background: #2a1800; border: 1px solid #6a3a10; border-radius: 22px; color: var(--cream); font-size: 0.93rem; font-family: sans-serif; padding: 10px 16px; resize: none; outline: none; max-height: 140px; min-height: 42px; line-height: 1.5; transition: border-color 0.2s ease, box-shadow 0.2s ease; overflow-y: auto; }
+    #message-input:focus { border-color: var(--amber); box-shadow: 0 0 0 3px rgba(200,140,40,0.2); }
+    #message-input::placeholder { color: #7a5a30; }
+    #send-btn { width: 42px; height: 42px; background: linear-gradient(135deg, var(--amber) 0%, var(--amber-dark) 100%); border: none; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; transition: all 0.2s ease; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+    #send-btn:hover:not(:disabled) { transform: scale(1.08); box-shadow: 0 4px 14px rgba(200,140,40,0.5); }
+    #send-btn:disabled { background: #3a2a10; cursor: not-allowed; transform: none; }
+    #send-btn svg { fill: white; }
+
+    /* Donate modal */
+    #donate-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
+
+    #chat-window::-webkit-scrollbar { width: 6px; }
+    #chat-window::-webkit-scrollbar-track { background: transparent; }
+    #chat-window::-webkit-scrollbar-thumb { background: var(--bark); border-radius: 3px; }
+
+    @media (max-width: 480px) {
+      .bubble { max-width: 92%; font-size: 0.88rem; }
+      header { padding: 10px 14px; gap: 10px; }
+      .header-text h1 { font-size: 1.1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="leaf" style="left:8%;  animation-duration:12s; animation-delay:0s;   font-size:1.2rem;">🍂</div>
+<div class="leaf" style="left:22%; animation-duration:15s; animation-delay:3s;   font-size:1rem;">🍃</div>
+<div class="leaf" style="left:38%; animation-duration:10s; animation-delay:7s;   font-size:1.5rem;">🍁</div>
+<div class="leaf" style="left:55%; animation-duration:14s; animation-delay:1s;   font-size:0.9rem;">🍃</div>
+<div class="leaf" style="left:72%; animation-duration:11s; animation-delay:5s;   font-size:1.3rem;">🍂</div>
+<div class="leaf" style="left:88%; animation-duration:16s; animation-delay:9s;   font-size:1rem;">🍃</div>
+
+<div id="app">
+  <header>
+    <div class="header-icon">🐿️</div>
+    <div class="header-text">
+      <h1>Sam — I Found a Baby Squirrel!</h1>
+      <p><span class="status-dot"></span>Emergency guide · <em>The Comprehensive Squirrel Bible</em></p>
+    </div>
+    <a class="back-link" href="/">← Back</a>
+  </header>
+
+  <div class="emergency-banner">
+    <strong>🚨 Do NOT feed or give water.</strong> Warmth first — always. Baby squirrels can safely go several hours without food or water.
+    &nbsp;·&nbsp;<span onclick="showDonate()" style="color:#ffb060;text-decoration:underline;cursor:pointer;">🥜 Buy Sam some nuts</span>
+  </div>
+
+  <div id="chat-window"></div>
+
+  <div id="input-area">
+    <textarea id="message-input" placeholder="Ask Sam anything…" rows="1"></textarea>
+    <button id="send-btn" onclick="sendMessage()" title="Send">
+      <svg width="18" height="18" viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- Donate Modal -->
+<div id="donate-modal" onclick="closeDonate()">
+  <div onclick="event.stopPropagation()" style="background:linear-gradient(135deg,#2a1f12 0%,#1a150d 100%);border:1px solid #6b4c2a;border-radius:16px;padding:30px;max-width:480px;width:100%;position:relative;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.6);">
+    <button onclick="closeDonate()" style="position:absolute;top:14px;right:16px;background:none;border:none;color:#a07850;font-size:1.1rem;cursor:pointer;">✕</button>
+    <div style="font-size:3rem;margin-bottom:10px;">🐿️🥜</div>
+    <h2 style="color:#c8a060;font-size:1.2rem;margin-bottom:12px;">Buy Sam Some Nuts!</h2>
+    <p style="color:#a07850;font-family:sans-serif;font-size:0.88rem;line-height:1.7;margin-bottom:12px;">Sam and Hazel are free resources for anyone who finds a baby squirrel in need. If they helped you save a tiny life, consider tossing a few nuts their way!</p>
+    <a href="https://venmo.com/squirrel_school" target="_blank" rel="noopener" style="display:inline-block;background:#008CFF;color:white;font-family:sans-serif;font-weight:bold;font-size:1rem;padding:14px 28px;border-radius:30px;text-decoration:none;margin:10px 0 16px;box-shadow:0 4px 15px rgba(0,140,255,0.4);">💙 Donate via Venmo @squirrel_school</a>
+    <p style="color:#7aaa52;font-family:sans-serif;font-size:0.82rem;">Every nut counts. Thank you! 🌿</p>
+  </div>
+</div>
+
+<script>
+  // ── Donate ───────────────────────────────────────────
+  function showDonate() { document.getElementById('donate-modal').style.display = 'flex'; }
+  function closeDonate() { document.getElementById('donate-modal').style.display = 'none'; }
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeDonate(); });
+
+  // ── State ────────────────────────────────────────────
+  const conversationHistory = [];
+  let isStreaming = false;
+  let treeComplete = false;
+  let babyAge = '';
+
+  // ── Helpers ──────────────────────────────────────────
+  function scrollToBottom() {
+    const cw = document.getElementById('chat-window');
+    cw.scrollTop = cw.scrollHeight;
+  }
+
+  function addBotBubble(html, choices) {
+    const cw = document.getElementById('chat-window');
+    const msg = document.createElement('div');
+    msg.className = 'message bot';
+
+    const avatar = document.createElement('div');
+    avatar.className = 'avatar bot';
+    avatar.textContent = '🐿️';
+
+    const bubble = document.createElement('div');
+    bubble.className = 'bubble bot';
+    bubble.innerHTML = html;
+
+    if (choices && choices.length) {
+      const choiceWrap = document.createElement('div');
+      choiceWrap.className = 'choices';
+      choices.forEach(c => {
+        const btn = document.createElement('button');
+        btn.className = 'choice-btn';
+        btn.textContent = c.label;
+        btn.onclick = () => {
+          // Disable all buttons in this group
+          choiceWrap.querySelectorAll('.choice-btn').forEach(b => { b.disabled = true; });
+          btn.classList.add('selected');
+          addUserBubble(c.label);
+          setTimeout(() => c.action(), 400);
+        };
+        choiceWrap.appendChild(btn);
+      });
+      bubble.appendChild(choiceWrap);
+    }
+
+    msg.appendChild(avatar);
+    msg.appendChild(bubble);
+    cw.appendChild(msg);
+    scrollToBottom();
+    return bubble;
+  }
+
+  function addUserBubble(text) {
+    const cw = document.getElementById('chat-window');
+    const msg = document.createElement('div');
+    msg.className = 'message user';
+    const avatar = document.createElement('div');
+    avatar.className = 'avatar user';
+    avatar.textContent = '🌿';
+    const bubble = document.createElement('div');
+    bubble.className = 'bubble user';
+    bubble.textContent = text;
+    msg.appendChild(avatar);
+    msg.appendChild(bubble);
+    cw.appendChild(msg);
+    scrollToBottom();
+  }
+
+  function addTypingIndicator() {
+    const cw = document.getElementById('chat-window');
+    const msg = document.createElement('div');
+    msg.className = 'message bot';
+    msg.id = 'typing-msg';
+    const avatar = document.createElement('div');
+    avatar.className = 'avatar bot';
+    avatar.textContent = '🐿️';
+    const bubble = document.createElement('div');
+    bubble.className = 'bubble bot';
+    bubble.innerHTML = '<div class="typing-indicator"><span></span><span></span><span></span></div>';
+    msg.appendChild(avatar);
+    msg.appendChild(bubble);
+    cw.appendChild(msg);
+    scrollToBottom();
+  }
+
+  function removeTypingIndicator() {
+    const el = document.getElementById('typing-msg');
+    if (el) el.remove();
+  }
+
+  function pause(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+  // ── Markdown renderer ────────────────────────────────
+  function renderMarkdown(text) {
+    let html = text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    html = html.replace(/⚠️([^\n]+)/g, '<div class="warn">⚠️$1</div>');
+    html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+    html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
+    html = html.replace(/^([•\-\*]) (.+)$/gm, '<li>$2</li>');
+    html = html.replace(/(<li>.*<\/li>\n?)+/gs, m => '<ul>' + m + '</ul>');
+    html = html.replace(/^\d+\. (.+)$/gm, '<li>$1</li>');
+    const parts = html.split(/\n\n+/);
+    html = parts.map(p => {
+      if (p.startsWith('<ul>') || p.startsWith('<div class="warn">')) return p;
+      return '<p>' + p.replace(/\n/g, '<br>') + '</p>';
+    }).join('\n');
+    return html;
+  }
+
+  // ── Streaming AI response ────────────────────────────
+  async function streamSamResponse(userMessage) {
+    conversationHistory.push({ role: 'user', content: userMessage });
+    addTypingIndicator();
+    isStreaming = true;
+
+    try {
+      const response = await fetch('/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: conversationHistory, mode: 'goodsam' }),
+      });
+
+      removeTypingIndicator();
+
+      const cw = document.getElementById('chat-window');
+      const msg = document.createElement('div');
+      msg.className = 'message bot';
+      const avatar = document.createElement('div');
+      avatar.className = 'avatar bot';
+      avatar.textContent = '🐿️';
+      const bubble = document.createElement('div');
+      bubble.className = 'bubble bot streaming-cursor';
+      msg.appendChild(avatar);
+      msg.appendChild(bubble);
+      cw.appendChild(msg);
+
+      let fullText = '';
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = '';
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split('\n');
+        buffer = lines.pop();
+        for (const line of lines) {
+          if (!line.startsWith('data: ')) continue;
+          const data = line.slice(6).trim();
+          if (!data) continue;
+          try {
+            const parsed = JSON.parse(data);
+            if (parsed.text) {
+              fullText += parsed.text;
+              bubble.innerHTML = renderMarkdown(fullText);
+              bubble.classList.add('streaming-cursor');
+              scrollToBottom();
+            } else if (parsed.done) {
+              bubble.classList.remove('streaming-cursor');
+              conversationHistory.push({ role: 'assistant', content: fullText });
+            }
+          } catch(e) {}
+        }
+      }
+      bubble.classList.remove('streaming-cursor');
+    } catch(err) {
+      removeTypingIndicator();
+      addBotBubble('<p>Sorry, I had a hiccup! Please try again or call a local rescuer directly.</p>');
+    }
+
+    isStreaming = false;
+    scrollToBottom();
+  }
+
+  // ── Open free chat ───────────────────────────────────
+  function openFreeChat(context) {
+    treeComplete = true;
+    conversationHistory.push({ role: 'user', content: context });
+    document.getElementById('input-area').classList.add('visible');
+    const textarea = document.getElementById('message-input');
+    textarea.addEventListener('input', () => {
+      textarea.style.height = 'auto';
+      textarea.style.height = Math.min(textarea.scrollHeight, 140) + 'px';
+    });
+    textarea.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+    });
+  }
+
+  async function sendMessage() {
+    if (isStreaming) return;
+    const input = document.getElementById('message-input');
+    const text = input.value.trim();
+    if (!text) return;
+    input.value = '';
+    input.style.height = 'auto';
+    addUserBubble(text);
+    await streamSamResponse(text);
+  }
+
+  // ════════════════════════════════════════
+  // DECISION TREE
+  // ════════════════════════════════════════
+
+  async function step_getHelp(reason) {
+    addTypingIndicator();
+    await pause(800);
+    removeTypingIndicator();
+    addBotBubble(`<p>💛 ${reason}</p><p>Here's who to call right now:</p><ul><li><strong>Granny's Boise Squirrel Rescue:</strong> 208-994-9909</li><li><strong>Animals in Distress Mammals:</strong> 208-353-8594</li><li><strong>WestVet (24 hours):</strong> 208-375-1600</li><li><strong>Outside the area?</strong> Visit <strong>AHNow.org</strong> to find a rescuer near you.</li></ul><p>While you wait:</p><ul><li>🌡️ <strong>Keep them warm but not hot</strong> — fill a sock with dry rice and microwave it for 30–60 seconds, or use a bottle of warm water. Wrap it in a cloth and place it next to the baby. Never put them directly on a heat source.</li><li>🧺 <strong>Add a hiding spot</strong> — tuck an old t-shirt or piece of fleece into the box so they can burrow under it. It helps them feel safe.</li><li>🤫 <strong>Dark and quiet</strong> — keep the box in a calm room away from pets, children, and noise.</li><li>🚫 <strong>No food, no water.</strong></li></ul><p>Do you have any other questions while you wait for help?</p>`);
+    openFreeChat(`The finder has a squirrel that needs immediate professional help. Reason: ${reason}. Help them stay calm while they wait. If it is a baby, they can use gentle warmth with a rice sock or warm water bottle wrapped in cloth. If it is an adult, remind them not to handle it directly.`);
+  }
+
+  async function step_reunion() {
+    addTypingIndicator();
+    await pause(800);
+    removeTypingIndicator();
+    addBotBubble(`<p>🌳 <strong>Excellent!</strong> Mom is almost always the best outcome. Let's try to bring her back. Here's exactly what to do:</p><ul><li><strong>Warm the baby:</strong> Fill a sock with dry rice, microwave 30–60 seconds, wrap in a cloth. Place it next to the baby in a small box. <em>(Skip the heat if it's over 90°F outside.)</em></li><li><strong>Place the box</strong> at the base of the tree where you found the baby.</li><li><strong>Play "Baby Squirrel Distress Calls"</strong> from YouTube on your phone near the box.</li><li><strong>Back away 50 feet</strong> and keep pets and kids inside.</li><li><strong>Wait 2–3 hours.</strong> If mom hasn't come by sunset, she likely won't.</li></ul><p>⚠️ <strong>Do not feed or give water</strong> while you wait. The baby is safe!</p><p>If mom doesn't come back, just say <strong>"Sam, reunion failed"</strong> and I'll help you find a rescuer. 🐿️</p>`);
+    openFreeChat(`The finder has a ${babyAge} baby squirrel with no injuries and no animal contact. They are attempting mom reunion. Walk them through any follow-up questions about the reunion process, and if they say reunion failed, help them find a local rescuer.`);
+  }
+
+  async function step_catDog() {
+    addTypingIndicator();
+    await pause(600);
+    removeTypingIndicator();
+    addBotBubble(
+      `<p>This is really important — cat and dog saliva carry bacteria that are invisible but can be fatal to a baby squirrel within 24–48 hours, even if the baby looks perfectly fine. Was the baby in contact with a cat or dog at any point?</p>`,
+      [
+        { label: '🐾 Yes — a cat or dog had contact with the baby', action: () => step_getHelp('Cat or dog contact means this little one needs antibiotics right away — even if they look fine. Please call a rescuer immediately.') },
+        { label: '✅ No — no animal contact that I know of',         action: () => step_reunion() },
+      ]
+    );
+  }
+
+  async function step_injuries() {
+    addTypingIndicator();
+    await pause(600);
+    removeTypingIndicator();
+    addBotBubble(
+      `<p>You're doing great! Now take a careful look at the baby. Can you see any of the following?</p><ul><li>Bleeding or obvious broken bones</li><li>Wasp or ant bites</li><li>Sunburn (red or blistered skin)</li><li>Fly strike — tiny white specks that look like grains of rice, especially in the ears, nose, or mouth <strong>(do not attempt to remove — just note if you see them)</strong></li></ul>`,
+      [
+        { label: '🚨 Yes — I can see injuries or fly strike',        action: () => step_getHelp('This baby needs a rescuer right away. Fly strike and injuries require immediate professional care.') },
+        { label: '✅ No — baby looks healthy with no visible injuries', action: () => step_catDog() },
+      ]
+    );
+  }
+
+  async function step_age(ageLabel, ageContext) {
+    babyAge = ageContext;
+    addTypingIndicator();
+    await pause(700);
+    removeTypingIndicator();
+    addBotBubble(`<p>${ageLabel} 💛 Now let's make sure they're safe. Take a careful look — can you see any visible injuries or anything unusual?</p>`, null);
+    await pause(400);
+    step_injuries();
+  }
+
+  async function step_start() {
+    addTypingIndicator();
+    await pause(1000);
+    removeTypingIndicator();
+    addBotBubble(
+      `<p>Ok, deep breath — you're already helping! 💛 Let's figure out the best way to help this little one. Can you tell me what the baby looks like?</p>`,
+      [
+        { label: '🩷 Pink and hairless with eyes closed',   action: () => step_age("That's a pinkie — aged 0 to 1 week.", 'pink hairless pinkie aged 0-1 week') },
+        { label: '🩶 Grey skin but no fur, eyes closed',    action: () => step_age("That's a grey — aged about 2 to 3 weeks.", 'grey skin no fur aged 2-3 weeks') },
+        { label: '🤎 Fuzzy with fur but eyes still closed', action: () => step_age("That's a baby — aged about 3 to 5 weeks.", 'fuzzy fur eyes closed aged 3-5 weeks') },
+        { label: '🐿️ Furry and fluffy with eyes open',     action: () => step_age("That's a toddler — aged about 5 to 8 weeks.", 'fully furry eyes open toddler aged 5-8 weeks') },
+        { label: '🐿️ It looks like a full grown adult squirrel', action: () => step_getHelp("Adult squirrels need a rescuer's help — they can bite and scratch when frightened, even if injured. If you can safely guide them into a box without direct contact, do that and add an old t-shirt or piece of fleece for them to hide under. Then keep the box in a dark, quiet place and call for help right away. Do not try to pick them up with your hands.") },
+      ]
+    );
+  }
+
+  // ── Kick off the tree with a warm welcome ────────────
+  async function init() {
+    await pause(500);
+    addBotBubble(`<p>Hi! I'm Sam 🐿️ — don't worry, you found the right place. I'm going to walk you through this step by step. Ready?</p>`,
+      [{ label: "Yes! Help me help this squirrel! 🐿️", action: () => step_start() }]
+    );
+  }
+
+  init();
+</script>
+</body>
+</html>

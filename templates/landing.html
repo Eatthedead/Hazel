@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hazel 🐿️ — Baby Squirrel Care Assistant</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --forest-dark:   #1a2e1a;
+      --forest-mid:    #2d4a2d;
+      --forest-green:  #3d6b3d;
+      --leaf-green:    #5a8a3a;
+      --moss:          #7aaa52;
+      --bark-dark:     #3b2a1a;
+      --bark:          #6b4c2a;
+      --bark-light:    #a07850;
+      --acorn:         #c8a060;
+      --cream:         #f5f0e8;
+      --parchment:     #ede5d5;
+      --shadow:        rgba(30,20,10,0.18);
+    }
+
+    html, body {
+      min-height: 100%;
+      font-family: 'Georgia', 'Times New Roman', serif;
+      background: var(--forest-dark);
+      color: var(--cream);
+      overflow-y: auto;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 20% 20%, rgba(90,138,58,0.18) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 80%, rgba(61,107,61,0.15) 0%, transparent 60%),
+        linear-gradient(160deg, #1a2e1a 0%, #0f1f0f 100%);
+      z-index: 0;
+    }
+
+    /* Falling leaves */
+    .leaf {
+      position: fixed;
+      font-size: 1.4rem;
+      opacity: 0;
+      animation: fall linear infinite;
+      pointer-events: none;
+      z-index: 1;
+    }
+    @keyframes fall {
+      0%   { transform: translateY(-60px) rotate(0deg);   opacity: 0; }
+      10%  { opacity: 0.6; }
+      90%  { opacity: 0.4; }
+      100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+    }
+
+    /* Main layout */
+    .container {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100dvh;
+      padding: 30px 20px;
+      text-align: center;
+    }
+
+    /* Header */
+    .hero-icon {
+      font-size: 4rem;
+      margin-bottom: 14px;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));
+      animation: float 3s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-8px); }
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      color: var(--acorn);
+      font-weight: normal;
+      letter-spacing: 0.04em;
+      text-shadow: 0 2px 6px rgba(0,0,0,0.5);
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      font-size: 0.95rem;
+      color: var(--bark-light);
+      font-family: sans-serif;
+      margin-bottom: 50px;
+      max-width: 420px;
+      line-height: 1.6;
+    }
+
+    /* Cards */
+    .cards {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      justify-content: center;
+      max-width: 760px;
+      width: 100%;
+    }
+
+    .card {
+      flex: 1;
+      min-width: 280px;
+      max-width: 340px;
+      background: linear-gradient(135deg, #2a1f12 0%, #1a150d 100%);
+      border: 2px solid var(--bark);
+      border-radius: 20px;
+      padding: 34px 28px;
+      cursor: pointer;
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      transition: all 0.25s ease;
+      box-shadow: 0 6px 30px rgba(0,0,0,0.4);
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 14px 40px rgba(0,0,0,0.5);
+    }
+
+    .card.goodsam {
+      border-color: #e8a030;
+    }
+    .card.goodsam:hover {
+      border-color: var(--acorn);
+      background: linear-gradient(135deg, #3a2a10 0%, #2a1f0d 100%);
+    }
+
+    .card.rehabber {
+      border-color: var(--leaf-green);
+    }
+    .card.rehabber:hover {
+      border-color: var(--moss);
+      background: linear-gradient(135deg, #1a2e1a 0%, #0f200f 100%);
+    }
+
+    .card-icon {
+      font-size: 3rem;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
+    }
+
+    .card-title {
+      font-size: 1.25rem;
+      color: var(--cream);
+      letter-spacing: 0.02em;
+    }
+
+    .card.goodsam .card-title { color: var(--acorn); }
+    .card.rehabber .card-title { color: var(--moss); }
+
+    .card-desc {
+      font-size: 0.84rem;
+      color: var(--bark-light);
+      font-family: sans-serif;
+      line-height: 1.6;
+      text-align: center;
+    }
+
+    .card-btn {
+      margin-top: 8px;
+      padding: 10px 24px;
+      border-radius: 30px;
+      font-family: sans-serif;
+      font-size: 0.88rem;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+      letter-spacing: 0.03em;
+      transition: all 0.2s ease;
+    }
+
+    .card.goodsam .card-btn {
+      background: linear-gradient(135deg, #e8a030 0%, #c87820 100%);
+      color: #1a0f00;
+      box-shadow: 0 3px 12px rgba(200,120,32,0.4);
+    }
+    .card.goodsam:hover .card-btn {
+      box-shadow: 0 5px 18px rgba(200,120,32,0.6);
+    }
+
+    .card.rehabber .card-btn {
+      background: linear-gradient(135deg, var(--leaf-green) 0%, var(--forest-green) 100%);
+      color: #fff;
+      box-shadow: 0 3px 12px rgba(90,138,58,0.4);
+    }
+    .card.rehabber:hover .card-btn {
+      box-shadow: 0 5px 18px rgba(90,138,58,0.6);
+    }
+
+    /* Footer */
+    .footer {
+      margin-top: 44px;
+      font-size: 0.73rem;
+      color: #5a4a38;
+      font-family: sans-serif;
+    }
+
+    @media (max-width: 500px) {
+      h1 { font-size: 1.6rem; }
+      .cards { gap: 16px; }
+      .card { padding: 26px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="leaf" style="left:5%;  animation-duration:12s; animation-delay:0s;   font-size:1.2rem;">🍂</div>
+<div class="leaf" style="left:18%; animation-duration:15s; animation-delay:4s;   font-size:1rem;">🍃</div>
+<div class="leaf" style="left:35%; animation-duration:10s; animation-delay:8s;   font-size:1.5rem;">🍁</div>
+<div class="leaf" style="left:58%; animation-duration:14s; animation-delay:2s;   font-size:0.9rem;">🍃</div>
+<div class="leaf" style="left:75%; animation-duration:11s; animation-delay:6s;   font-size:1.3rem;">🍂</div>
+<div class="leaf" style="left:90%; animation-duration:16s; animation-delay:10s;  font-size:1rem;">🍃</div>
+
+<div class="container">
+  <div class="hero-icon">🐿️🐿️</div>
+  <h1>Hi! We're Hazel and Sam!</h1>
+  <p class="subtitle">Your baby squirrel care guides — powered by <em>The Comprehensive Squirrel Bible</em>. How can we help you today?</p>
+
+  <div class="cards">
+
+    <a class="card goodsam" href="/goodsam">
+      <div class="card-icon">🚨</div>
+      <div class="card-title">I Found a Baby Squirrel!</div>
+      <p class="card-desc">Just found a baby squirrel and not sure what to do? Sam will walk you through exactly what to do, step by step.</p>
+      <button class="card-btn">Talk to Sam 🐿️</button>
+    </a>
+
+    <a class="card rehabber" href="/rehabber">
+      <div class="card-icon">🌿</div>
+      <div class="card-title">I'm a Rescuer or Volunteer</div>
+      <p class="card-desc">Full access to our complete squirrel rehabilitation knowledge base — feeding, medical care, housing, medications, and release protocols.</p>
+      <button class="card-btn">Talk to Hazel 🐿️</button>
+    </a>
+
+  </div>
+
+  <p class="footer">© Tye Lombardi · <em>The Comprehensive Squirrel Bible</em> · Not a substitute for professional veterinary care.
+    &nbsp;·&nbsp;<span onclick="showDonate()" style="color:#7aaa52;text-decoration:underline;cursor:pointer;">🥜 Buy Hazel some nuts</span>
+  </p>
+</div>
+
+<!-- Donate Modal -->
+<div id="donate-modal" onclick="closeModal()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:100;align-items:center;justify-content:center;padding:20px;">
+  <div onclick="event.stopPropagation()" style="background:linear-gradient(135deg,#2a1f12 0%,#1a150d 100%);border:1px solid #6b4c2a;border-radius:16px;padding:30px;max-width:480px;width:100%;position:relative;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.6);">
+    <button onclick="closeModal()" style="position:absolute;top:14px;right:16px;background:none;border:none;color:#a07850;font-size:1.1rem;cursor:pointer;padding:4px 8px;border-radius:4px;">✕</button>
+    <div style="font-size:3rem;margin-bottom:10px;">🐿️🥜</div>
+    <h2 style="color:#c8a060;font-size:1.2rem;margin-bottom:12px;">Buy Hazel Some Nuts!</h2>
+    <p style="color:#a07850;font-family:sans-serif;font-size:0.88rem;line-height:1.7;margin-bottom:12px;">Hazel is a free resource for wildlife rehabilitators everywhere. If she's helped you save a tiny life, consider tossing a few nuts her way!</p>
+    <p style="color:#a07850;font-family:sans-serif;font-size:0.88rem;line-height:1.7;margin-bottom:12px;">Your support helps keep this tool running and supports the ongoing work of <em>The Comprehensive Squirrel Bible</em>.</p>
+    <a href="https://venmo.com/squirrel_school" target="_blank" rel="noopener" style="display:inline-block;background:#008CFF;color:white;font-family:sans-serif;font-weight:bold;font-size:1rem;padding:14px 28px;border-radius:30px;text-decoration:none;margin:10px 0 16px;box-shadow:0 4px 15px rgba(0,140,255,0.4);">💙 Donate via Venmo @squirrel_school</a>
+    <p style="color:#7aaa52;font-family:sans-serif;font-size:0.82rem;">Every nut counts. Thank you! 🌿</p>
+  </div>
+</div>
+<script>
+  function showDonate() {
+    const m = document.getElementById('donate-modal');
+    m.style.display = 'flex';
+  }
+  function closeModal() {
+    document.getElementById('donate-modal').style.display = 'none';
+  }
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+</script>
+
+</body>
+</html>
