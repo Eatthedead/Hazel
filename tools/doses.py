@@ -89,7 +89,7 @@ TEXT_ONLY = [
   "CHLORHEXIDINE (Nolvasan / Hibiclens)", "CLOTRIMAZOLE / LOTRIMIN",
   "DECONGESTANT SPRAY / AFRIN (Oxymetazoline)", "ALBUTEROL SULFATE (Salbutamol) — NEBULIZED",
   "GENTAMYCIN (Gentamicin / Gentocin)", "IBUPROFEN", "L-GLUTAMINE", "LACTATED RINGER’S SOLUTION (LRS)",
-  "MYLICON (Simethicone)", "NEOSPORIN (Triple Antibiotic)", "OMEPRAZOLE (Prilosec)", "PERMETHRIN",
+  "MYLICON (Simethicone)", "NEOSPORIN (Triple Antibiotic)", "OMEPRAZOLE (Prilosec)", "PERMETHRIN — DO NOT USE",
   "PREDNISONE (Prednisolone)", "REVOLUTION (Selamectin)", "SIMETHICONE (Infant Gas Drops)",
   "SSD CREAM / SILVADENE (Silver Sulfadiazine)", "TERRAMYCIN (Oxytetracycline)", "TRAZODONE",
   "ZINC TOXICITY", "XYLITOL", "FRONTLINE (Fipronil)", "LOPERAMIDE (Imodium)",
